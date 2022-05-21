@@ -1,5 +1,5 @@
 import './index.css';
-import idl from '../../target/idl/myepicproject.json';
+import idl from './myepicproject.json';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { AnchorProvider, Idl, Program, web3 } from '@project-serum/anchor';
 import { Buffer } from 'buffer';
@@ -9,14 +9,15 @@ import kp from './keypair.json';
 type Post = {
   content: string;
   userAddress: string;
-  imgLink?: string;
+  attachment?: string;
+  likes: number;
+  liked: boolean;
 };
-window.Buffer = Buffer;
 
 // SystemProgram is a reference to the Solana runtime!
 const { SystemProgram, Keypair } = web3;
 
-// Create a keypair for the account that will hold the GIF data.
+// Create a keypair for the account that will hold the data.
 const arr = Object.values(kp._keypair.secretKey);
 const secret = new Uint8Array(arr);
 const baseAccount = Keypair.fromSecretKey(secret);
@@ -159,6 +160,42 @@ function App() {
       console.log('Error sending post: ', error);
     }
   };
+  const likePost = async (postId: number) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl as Idl, programID, provider);
+
+      await program.methods
+        .likePost(postId)
+        .accounts({
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        })
+        .rpc();
+      console.log('Liked');
+      await getPosts();
+    } catch (error) {
+      console.log('Error liking post: ', error);
+    }
+  };
+  const dislikePost = async (postId: number) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl as Idl, programID, provider);
+
+      await program.methods
+        .dislikePost(postId)
+        .accounts({
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        })
+        .rpc();
+      console.log('Disliked');
+      await getPosts();
+    } catch (error) {
+      console.log('Error disliking post: ', error);
+    }
+  };
   return (
     <div className='App'>
       <main className='p-32 xl:px-72'>
@@ -269,7 +306,7 @@ function App() {
                   className='card flex-1 bg-base-200 text-primary-content'
                 >
                   <figure>
-                    <img src={post.imgLink} alt={post.imgLink} />
+                    <img src={post.attachment} alt={post.attachment} />
                   </figure>
                   <div className='card-body'>
                     <h6 className='text-slate-600'>
@@ -285,6 +322,17 @@ function App() {
                       )
                     </h6>
                     <p>{post.content}</p>
+                    <div
+                      onClick={() => {
+                        if (!post.liked) likePost(idx);
+                        else dislikePost(idx);
+                      }}
+                      className={`${
+                        post.liked ? 'bg-primary-focus' : 'bg-slate-600'
+                      }   grid place-items-center rounded-full px-4 py-2 w-fit cursor-pointer`}
+                    >
+                      <span className='font-bold'>{post.likes}</span>
+                    </div>
                   </div>
                 </div>
               ))}

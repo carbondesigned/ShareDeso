@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-
 declare_id!("HdMEs2wsVHy3HyjW3BjQ4AJwTASWM4RwteJC5jsm4xYr");
 
 #[program]
@@ -12,19 +11,45 @@ pub mod myepicproject {
   }
   
 	// Another function woo!
-  pub fn add_post(ctx: Context<AddPost>, img_link: String, content: String) -> Result <()> {
+  pub fn add_post(ctx: Context<AddPost>, attachment: String, content: String) -> Result <()> {
     // Get a reference to the account and increment total_posts.
     let base_account = &mut ctx.accounts.base_account;
     let user = &mut ctx.accounts.user;
 
     let post = PostItem {
-      img_link: img_link.to_string(),
+      attachment: attachment.to_string(),
       content: content.to_string(),
       user_address: *user.to_account_info().key,
+      likes: 0,
+      liked: false,
     };
 
     base_account.posts.push(post);
     base_account.total_posts += 1;
+    Ok(())
+  }
+
+  pub fn like_post(ctx: Context<VoteOnPost>, post_id: u32) -> Result <()> {
+    let base_account = &mut ctx.accounts.base_account;
+
+    let post = &mut base_account.posts[post_id as usize];
+    if post.liked == true {
+      return Ok(());
+    }
+
+    post.likes += 1;
+    post.liked = true;
+    Ok(())
+  }
+  pub fn dislike_post(ctx: Context<VoteOnPost>, post_id: u32) -> Result <()> {
+    let base_account = &mut ctx.accounts.base_account;
+
+    let post = &mut base_account.posts[post_id as usize];
+    if post.liked == true {
+      post.likes -= 1;
+      post.liked = false;
+    }
+
     Ok(())
   }
 }
@@ -47,12 +72,23 @@ pub struct AddPost<'info> {
   #[account(mut)]
   pub user: Signer<'info>,
 }
+#[derive(Accounts)]
+pub struct VoteOnPost<'info> {
+  #[account(mut)]
+  pub base_account: Account<'info, BaseAccount>,
+  #[account(mut)]
+  pub user: Signer<'info>,
+}
 
 #[derive(Debug, Clone, AnchorSerialize, AnchorDeserialize)]
+// trait `SliceIndex<[PostItem]>`
+
 pub struct PostItem {
-  pub img_link: String,
+  pub attachment: String,
   pub content: String,
   pub user_address: Pubkey,
+  pub likes: u32,
+  pub liked: bool,
 }
 
 #[account]

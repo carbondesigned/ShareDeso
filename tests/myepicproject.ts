@@ -28,7 +28,7 @@ describe('myepicproject', () => {
     let account = await program.account.baseAccount.fetch(
       baseAccount.publicKey
     );
-    console.log('👀 GIF Count', account.totalPosts.toString());
+    console.log('👀 Posts Count', account.totalPosts.toString());
 
     await program.methods
       .addPost(
@@ -41,8 +41,27 @@ describe('myepicproject', () => {
       .rpc();
     // Get the account again to see what changed.
     account = await program.account.baseAccount.fetch(baseAccount.publicKey);
-    console.log('👀 GIF Count', account.totalPosts.toString());
+    console.log('👀 Posts Count', account.totalPosts.toString());
 
+    // like a post
+    await program.methods
+      .likePost(0)
+      .accounts({
+        baseAccount: baseAccount.publicKey,
+      })
+      .rpc();
+    account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+    console.log('👀 Posts Count', account.posts[0].toString());
+
+    // dislike a post
+    await program.methods
+      .dislikePost(0)
+      .accounts({
+        baseAccount: baseAccount.publicKey,
+      })
+      .rpc();
+    account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+    console.log('👀 Posts Count', account.posts[0].toString());
     // see the posts
     console.log('📝 Posts', account.posts);
   });
