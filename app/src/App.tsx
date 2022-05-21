@@ -1,20 +1,51 @@
 import './index.css';
-import react, { useEffect, useState } from 'react';
+import idl from '../../target/idl/myepicproject.json';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { AnchorProvider, Idl, Program, web3 } from '@project-serum/anchor';
+import { Buffer } from 'buffer';
+import { useEffect, useState } from 'react';
+import kp from './keypair.json';
+
 type Post = {
   content: string;
-  username: string;
-  attachment?: string;
+  userAddress: string;
+  imgLink?: string;
 };
+window.Buffer = Buffer;
+
+// SystemProgram is a reference to the Solana runtime!
+const { SystemProgram, Keypair } = web3;
+
+// Create a keypair for the account that will hold the GIF data.
+const arr = Object.values(kp._keypair.secretKey);
+const secret = new Uint8Array(arr);
+const baseAccount = Keypair.fromSecretKey(secret);
+
+// Get our program's id from the IDL file.
+const programID = new PublicKey(idl.metadata.address);
+
+// Set our network to devnet.
+const network = clusterApiUrl('devnet');
+
 function App() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [content, setContent] = useState<string>('');
   const [attachment, setAttachment] = useState<string>('');
+  const [posts, setPosts] = useState<Post[] | null>([]);
 
   const TWITTER_HANDLE = 'devdylanr';
   const TWITTER_URL = `https://twitter.com/${TWITTER_HANDLE}`;
 
   const charCount = (text: string): number => {
     return text.length;
+  };
+
+  const getProvider = () => {
+    const connection = new Connection(network, 'processed');
+    const provider = new AnchorProvider(connection, window.solana, {
+      commitment: 'processed',
+    });
+    return provider;
   };
 
   const isWalletConnected = async () => {
@@ -45,6 +76,47 @@ function App() {
     }
   };
 
+  const getPosts = async () => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl as Idl, programID, provider);
+      const account = await program.account.baseAccount.fetch(
+        baseAccount.publicKey
+      );
+
+      console.log('Got account: ', account);
+      // @ts-ignore
+      setPosts(account.posts);
+    } catch (error) {
+      console.log('error: ', error);
+      setPosts(null);
+    }
+  };
+  const createPostAccount = async () => {
+    const provider = getProvider();
+    console.log(provider.wallet.publicKey);
+    try {
+      const program = new Program(idl as Idl, programID, provider);
+      console.log('ping');
+      await program.methods
+        .startStuffOff()
+        .accounts({
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([baseAccount])
+        .rpc();
+      console.log(
+        'Created a new BaseAccount w/ address:',
+        baseAccount.publicKey.toString()
+      );
+      await getPosts();
+    } catch (error) {
+      console.log('Error creating BaseAccount account:', error);
+    }
+  };
+  console.log(posts);
   useEffect(() => {
     const onLoad = async () => {
       await isWalletConnected();
@@ -52,37 +124,39 @@ function App() {
     window.addEventListener('load', onLoad);
     return () => window.removeEventListener('load', onLoad);
   }, []);
-  const posts: Post[] = [
-    {
-      username: 'Jon',
-      content: 'This is a shorter post and actually the first!',
-      attachment:
-        'https://media.giphy.com/media/ViPOweHStsX59yqXoX/giphy-downsized-large.gif',
-    },
-    {
-      username: 'Jon',
-      content:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi eveniet dignissimos nisi non magnam incidunt repudiandae delectus, ut sint harum. Aperiam nihil eum est earum dolorum, ea ex distinctio ad.',
-      attachment:
-        'https://images.unsplash.com/photo-1652949843495-c6af1f4ca9a0?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500',
-    },
-    {
-      username: 'Jon',
-      content:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi eveniet dignissimos nisi non magnam incidunt repudiandae delectus, ut sint harum. Aperiam nihil eum est earum dolorum, ea ex distinctio ad.',
-    },
-    {
-      username: 'Jon',
-      content:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi eveniet dignissimos nisi non magnam incidunt repudiandae delectus, ut sint harum. Aperiam nihil eum est earum dolorum, ea ex distinctio ad.',
-    },
-  ];
+  useEffect(() => {
+    if (walletAddress) {
+      console.log('Fetching Posts...');
+
+      getPosts();
+    }
+  }, [walletAddress]);
 
   const sendPost = async () => {
-    if (charCount(content) > 0) {
-      console.log('Post: ', content, attachment);
-    } else {
+    if (charCount(content) < 0) {
       console.log('Empty content.');
+      setContent('');
+      setAttachment('');
+      return;
+    }
+
+    try {
+      const provider = getProvider();
+      const program = new Program(idl as Idl, programID, provider);
+
+      await program.methods
+        .addPost(attachment, content)
+        .accounts({
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        })
+        .rpc();
+      console.log('Post: ', content, attachment);
+      setContent('');
+      setAttachment('');
+      await getPosts();
+    } catch (error) {
+      console.log('Error sending post: ', error);
     }
   };
   return (
@@ -109,6 +183,12 @@ function App() {
               </div>
             </div>
           </div>
+        ) : posts === null ? (
+          <>
+            <button className='btn btn-primary' onClick={createPostAccount}>
+              Do One-Time Initialization For Account
+            </button>
+          </>
         ) : (
           <>
             <div className='bg-base-200 p-12 rounded-xl'>
@@ -126,6 +206,7 @@ function App() {
                   </label>
                   <textarea
                     name='content'
+                    value={content}
                     placeholder='Something.'
                     className='textarea w-full min-h-[6em] text-lg'
                     maxLength={250}
@@ -163,6 +244,7 @@ function App() {
                       </svg>
                     </span>
                     <input
+                      value={attachment}
                       onChange={(e) => setAttachment(e.target.value)}
                       type='text'
                       placeholder='https://image.com/image.png'
@@ -187,10 +269,21 @@ function App() {
                   className='card flex-1 bg-base-200 text-primary-content'
                 >
                   <figure>
-                    <img src={post.attachment} alt={post.attachment} />
+                    <img src={post.imgLink} alt={post.imgLink} />
                   </figure>
                   <div className='card-body'>
-                    <h4 className='card-title'>{post.username}</h4>
+                    <h6 className='text-slate-600'>
+                      (
+                      {post.userAddress.toString().substring(0, 4) +
+                        '...' +
+                        post.userAddress
+                          .toString()
+                          .substring(
+                            post.userAddress.toString().length - 4,
+                            post.userAddress.toString().length
+                          )}
+                      )
+                    </h6>
                     <p>{post.content}</p>
                   </div>
                 </div>
