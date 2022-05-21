@@ -1,10 +1,9 @@
-import './index.css';
-import idl from './myepicproject.json';
+import idl from '../myepicproject.json';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { AnchorProvider, Idl, Program, web3 } from '@project-serum/anchor';
-import { Buffer } from 'buffer';
 import { useEffect, useState } from 'react';
-import kp from './keypair.json';
+import kp from '../keypair.json';
+import Image from 'next/image';
 
 type Post = {
   content: string;
@@ -202,10 +201,17 @@ function App() {
         {!walletAddress ? (
           <div className='hero min-h-screen bg-base-200'>
             <div className='hero-content flex-col text-center'>
-              <img
-                className='mask mask-squircle'
-                src='https://images.unsplash.com/photo-1651055712444-4e0f78a60c20?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250'
-              />
+              <div className='mask mask-squircle'>
+                <Image
+                  alt='solana'
+                  layout='intrinsic'
+                  width={250}
+                  height={250}
+                  objectFit='contain'
+                  objectPosition='center'
+                  src='https://images.unsplash.com/photo-1651055712444-4e0f78a60c20?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250'
+                />
+              </div>
               <div className='max-w-md'>
                 <h1 className='text-5xl font-bold'>DeSo Twitter</h1>
                 <p className='py-6'>Learning Solana & Rust</p>
