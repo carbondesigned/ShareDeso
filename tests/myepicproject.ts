@@ -31,7 +31,10 @@ describe('myepicproject', () => {
     console.log('👀 GIF Count', account.totalPosts.toString());
 
     await program.methods
-      .addPost()
+      .addPost(
+        'https://media.giphy.com/media/26xBzu2ogAunL19hS/giphy-downsized-large.gif',
+        'This is the first test post'
+      )
       .accounts({
         baseAccount: baseAccount.publicKey,
       })
@@ -39,5 +42,8 @@ describe('myepicproject', () => {
     // Get the account again to see what changed.
     account = await program.account.baseAccount.fetch(baseAccount.publicKey);
     console.log('👀 GIF Count', account.totalPosts.toString());
+
+    // see the posts
+    console.log('📝 Posts', account.posts);
   });
 });
