@@ -18,6 +18,7 @@ function App() {
   useOnLoad();
   const [content, setContent] = useState<string>('');
   const [attachment, setAttachment] = useState<string>('');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (walletAddress) {
@@ -52,6 +53,7 @@ function App() {
         .rpc();
       setContent('');
       setAttachment('');
+      setModalOpen(false);
       await getPosts();
     } catch (error) {
       console.log('Error sending post: ', error);
@@ -121,7 +123,7 @@ function App() {
         {!walletAddress ? (
           <Welcome />
         ) : posts === null ? (
-          <div>
+          <div className='hero min-h-screen'>
             <button className='btn btn-primary' onClick={createPostAccount}>
               Do One-Time Initialization For Account
             </button>
@@ -130,6 +132,9 @@ function App() {
           <div>
             <div className='flex justify-between items-center'>
               <label
+                onClick={() => {
+                  setModalOpen(true);
+                }}
                 htmlFor='create-modal'
                 className='btn btn-lg font-bold modal-button btn-primary'
               >
@@ -140,14 +145,16 @@ function App() {
                 id='create-modal'
                 className='modal-toggle'
               />
-              <CreatePostModal
-                MAX_CHAR_COUNT={MAX_CHAR_COUNT}
-                attachment={attachment}
-                content={content}
-                handleSubmit={handleSubmit}
-                setAttachment={setAttachment}
-                setContent={setContent}
-              />
+              {modalOpen && (
+                <CreatePostModal
+                  MAX_CHAR_COUNT={MAX_CHAR_COUNT}
+                  attachment={attachment}
+                  content={content}
+                  handleSubmit={handleSubmit}
+                  setAttachment={setAttachment}
+                  setContent={setContent}
+                />
+              )}
               <div
                 data-tip='Copy your wallet address to clipboard'
                 className='bg-accent text-base-200 cursor-pointer py-6 px-12 rounded-xl tooltip tooltip-bottom'

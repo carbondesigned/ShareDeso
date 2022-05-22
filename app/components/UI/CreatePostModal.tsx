@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext';
 import { charCount } from '../../utils/charCount';
 
 type Props = {

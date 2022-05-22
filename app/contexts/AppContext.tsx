@@ -14,14 +14,14 @@ export function useAppContext() {
 export function AppProvider({ children }: Props) {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[] | null>([]);
-  // const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const state = {
     walletAddress,
     setWalletAddress,
     posts,
     setPosts,
-    // modalOpen,
-    // setModalOpen,
+    modalOpen,
+    setModalOpen,
   };
   return <AppContext.Provider value={state}>{children}</AppContext.Provider>;
 }
