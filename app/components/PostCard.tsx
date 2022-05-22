@@ -1,9 +1,9 @@
 import React from 'react';
-import { Post as PostCard } from '../types';
+import { Post } from '../types';
 import { formatWalletAddress } from '../utils/formatWalletAddress';
 
 type Props = {
-  post: PostCard;
+  post: Post;
   likePost: (idx: number) => void;
   dislikePost: (idx: number) => void;
   id: number;
