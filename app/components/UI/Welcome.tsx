@@ -5,7 +5,7 @@ import useConnectWallet from '../../hooks/useConnectWallet';
 function Welcome() {
   const { connectWallet } = useConnectWallet();
   return (
-    <div className='hero min-h-screen bg-base-200'>
+    <div className='hero min-h-screen bg-base-300 rounded-2xl'>
       <div className='hero-content flex-col text-center'>
         <div className='mask mask-squircle'>
           <Image
@@ -19,10 +19,15 @@ function Welcome() {
           />
         </div>
         <div className='max-w-md'>
-          <h1 className='text-5xl font-bold'>DeSo Twitter</h1>
-          <p className='py-6'>Learning Solana & Rust</p>
+          <h1 className='text-5xl font-bold text-base-100'>DeSo Twitter</h1>
+          <p className='pt-4 pb-12 text-xl text-base-200'>
+            Learning Solana & Rust
+          </p>
           <div className='tooltip tooltip-bottom' data-tip='Using Solana!'>
-            <button className='btn btn-primary' onClick={connectWallet}>
+            <button
+              className='btn btn-primary font-bold'
+              onClick={connectWallet}
+            >
               Connect your Wallet
             </button>
           </div>

@@ -20,26 +20,29 @@ const CreatePostModal = ({
 }: Props) => {
   return (
     <div className='modal'>
-      <div className='modal-box p-12 bg-base-200 rounded-xl'>
+      <div className='modal-box p-12 bg-accent text-base-200 rounded-xl'>
         <div className='flex justify-between items-center w-full'>
-          <h2 className='text-2xl font-bold leading-none'>
+          <h2 className='text-4xl font-bold leading-none'>
             Write a quick post
           </h2>
 
-          <label htmlFor='create-modal' className='btn btn-sm btn-circle'>
+          <label
+            htmlFor='create-modal'
+            className='btn bg-base-300 btn-sm btn-circle'
+          >
             ✕
           </label>
         </div>
-        <form onSubmit={handleSubmit} className='flex flex-col text-left'>
+        <form onSubmit={handleSubmit} className='flex mt-12 flex-col text-left'>
           <div>
             <label className='label' htmlFor='content'>
-              <span className='label-text'>Write something</span>
+              <span className='label-text text-base-200'>Write something</span>
             </label>
             <textarea
               name='content'
               value={content}
               placeholder='Something.'
-              className='textarea w-full min-h-[8em] text-md'
+              className='textarea w-full min-h-[8em] text-md bg-base-300'
               maxLength={MAX_CHAR_COUNT}
               onChange={(e) => setContent(e.target.value)}
             />
@@ -57,10 +60,10 @@ const CreatePostModal = ({
           </div>
           <div className='form-control'>
             <label className='label'>
-              <span className='label-text'>Attachments</span>
+              <span className='label-text text-base-200'>Attachments</span>
             </label>
             <label className='input-group'>
-              <span>
+              <span className='bg-accent border-4 border-base-300'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   className='h-6 w-6'
@@ -81,11 +84,11 @@ const CreatePostModal = ({
                 onChange={(e) => setAttachment(e.target.value)}
                 type='text'
                 placeholder='https://image.com/image.png'
-                className='input w-full input-bordered'
+                className='input w-full input-bordered bg-base-300'
               />
             </label>
           </div>
-          <div className='w-full flex justify-end'>
+          <div className='w-full mt-12 flex justify-end'>
             <div className='tooltip tooltip-bottom' data-tip='Post something!'>
               <button className='btn btn-primary'>Post</button>
             </div>

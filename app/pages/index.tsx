@@ -118,7 +118,7 @@ function App() {
   };
   return (
     <>
-      <main className='min-h-screen p-32 xl:px-72'>
+      <main className='min-h-screen bg-neutral p-32 xl:px-72 3xl:px-80'>
         {!walletAddress ? (
           <Welcome />
         ) : posts === null ? (
@@ -132,7 +132,7 @@ function App() {
             <div className='flex justify-between items-center'>
               <label
                 htmlFor='create-modal'
-                className='btn modal-button btn-primary'
+                className='btn btn-lg font-bold modal-button btn-primary'
               >
                 Create
               </label>
@@ -151,20 +151,17 @@ function App() {
               />
               <div
                 data-tip='Copy your wallet address to clipboard'
-                className='bg-base-200 cursor-pointer py-6 px-12 rounded-xl tooltip tooltip-bottom'
+                className='bg-accent text-base-200 cursor-pointer py-6 px-12 rounded-xl tooltip tooltip-bottom'
               >
                 <p
                   className='font-bold'
-                  onClick={() =>
-                    // copy wallet address to clipboard
-                    navigator.clipboard.writeText(walletAddress)
-                  }
+                  onClick={() => navigator.clipboard.writeText(walletAddress)}
                 >
                   {formatWalletAddress(walletAddress)}
                 </p>
               </div>
             </div>
-            <div className='grid grid-cols-2 xl:grid-cols-3 gap-6 mt-12'>
+            <div className='grid grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-6 mt-12'>
               {posts &&
                 posts.map((post: Post, idx: number) => (
                   <PostCard

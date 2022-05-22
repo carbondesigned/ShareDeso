@@ -11,12 +11,17 @@ type Props = {
 
 const PostCard = ({ post, likePost, dislikePost, id }: Props) => {
   return (
-    <div className='card flex-1 bg-base-200 text-primary-content'>
-      <figure>
-        <img src={post.attachment} alt={post.attachment} />
-      </figure>
+    <div className='card flex-1 bg-accent text-base-100'>
+      {/* @ts-ignore */}
+      {post?.attachment.length > 0 && (
+        <img
+          src={post.attachment}
+          alt={post.attachment}
+          className='object-cover'
+        />
+      )}
       <div className='card-body'>
-        <h6 className='text-slate-600'>
+        <h6 className='text-base-200'>
           ({formatWalletAddress(post.userAddress.toString())})
         </h6>
         <p>{post.content}</p>
