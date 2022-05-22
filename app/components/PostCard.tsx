@@ -1,5 +1,6 @@
 import React from 'react';
 import { Post as PostCard } from '../types';
+import { formatWalletAddress } from '../utils/formatWalletAddress';
 
 type Props = {
   post: PostCard;
@@ -16,16 +17,7 @@ const PostCard = ({ post, likePost, dislikePost, id }: Props) => {
       </figure>
       <div className='card-body'>
         <h6 className='text-slate-600'>
-          (
-          {post.userAddress.toString().substring(0, 4) +
-            '...' +
-            post.userAddress
-              .toString()
-              .substring(
-                post.userAddress.toString().length - 4,
-                post.userAddress.toString().length
-              )}
-          )
+          ({formatWalletAddress(post.userAddress.toString())})
         </h6>
         <p>{post.content}</p>
         <div
