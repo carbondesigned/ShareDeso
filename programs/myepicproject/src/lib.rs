@@ -29,6 +29,20 @@ pub mod myepicproject {
     Ok(())
   }
 
+  pub fn delete_post(ctx: Context<DeletePost>, index: u32) -> Result <()> {
+    let base_account = &mut ctx.accounts.base_account;
+    let user = &mut ctx.accounts.user;
+
+    if base_account.posts.len() > index as usize {
+      let post = &mut base_account.posts[index as usize];
+      if post.user_address == *user.to_account_info().key {
+        base_account.posts.remove(index as usize);
+        base_account.total_posts -= 1;
+      }
+    }
+    Ok(())
+  }
+
   pub fn like_post(ctx: Context<VoteOnPost>, post_id: u32) -> Result <()> {
     let base_account = &mut ctx.accounts.base_account;
 
@@ -74,6 +88,14 @@ pub struct AddPost<'info> {
 }
 #[derive(Accounts)]
 pub struct VoteOnPost<'info> {
+  #[account(mut)]
+  pub base_account: Account<'info, BaseAccount>,
+  #[account(mut)]
+  pub user: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct DeletePost<'info> {
   #[account(mut)]
   pub base_account: Account<'info, BaseAccount>,
   #[account(mut)]

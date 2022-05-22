@@ -96,6 +96,7 @@ function App() {
       console.log('Error liking post: ', error);
     }
   };
+
   const dislikePost = async (postId: number) => {
     try {
       const provider = getProvider();
@@ -113,6 +114,25 @@ function App() {
       console.log('Error disliking post: ', error);
     }
   };
+
+  const deletePost = async (postId: number) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl as Idl, programID, provider);
+
+      await program.methods
+        .deletePost(postId)
+        .accounts({
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        })
+        .rpc();
+      await getPosts();
+    } catch (error) {
+      console.log('Error deleting post: ', error);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendPost();
@@ -176,6 +196,7 @@ function App() {
                     id={idx}
                     dislikePost={dislikePost}
                     likePost={likePost}
+                    deletePost={deletePost}
                   />
                 ))}
             </div>
