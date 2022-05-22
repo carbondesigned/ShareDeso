@@ -4,3 +4,11 @@ declare global {
     solana: any;
   }
 }
+
+export type Post = {
+  content: string;
+  userAddress: string;
+  attachment?: string;
+  likes: number;
+  liked: boolean;
+};
