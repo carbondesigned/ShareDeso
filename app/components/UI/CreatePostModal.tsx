@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppContext } from '../../contexts/AppContext';
 import { charCount } from '../../utils/charCount';
 
 type Props = {
@@ -19,13 +20,18 @@ const CreatePostModal = ({
   MAX_CHAR_COUNT,
 }: Props) => {
   return (
-    <div className='modal'>
-      <div className='modal-box p-12 bg-accent text-base-200 rounded-xl'>
+    <label
+      htmlFor='create-modal'
+      className='modal modal-bottom sm:modal-middle'
+    >
+      <label
+        htmlFor='create-modal'
+        className='modal-box w-11/12 max-w-5xl p-12 bg-accent text-base-200 rounded-xl'
+      >
         <div className='flex justify-between items-center w-full'>
           <h2 className='text-4xl font-bold leading-none'>
             Write a quick post
           </h2>
-
           <label
             htmlFor='create-modal'
             className='btn bg-base-300 btn-sm btn-circle'
@@ -88,14 +94,14 @@ const CreatePostModal = ({
               />
             </label>
           </div>
-          <div className='w-full mt-12 flex justify-end'>
+          <div className='modal-action w-full mt-12 flex justify-end'>
             <div className='tooltip tooltip-bottom' data-tip='Post something!'>
               <button className='btn btn-primary'>Post</button>
             </div>
           </div>
         </form>
-      </div>
-    </div>
+      </label>
+    </label>
   );
 };
 

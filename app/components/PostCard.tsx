@@ -11,7 +11,7 @@ type Props = {
 
 const PostCard = ({ post, likePost, dislikePost, id }: Props) => {
   return (
-    <div className='card flex-1 bg-accent text-base-100'>
+    <div className='card break-inside flex-1 bg-accent text-base-100 h-fit my-6'>
       {/* @ts-ignore */}
       {post?.attachment.length > 0 && (
         <img

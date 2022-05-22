@@ -8,13 +8,12 @@ import { programID, baseAccount, SystemProgram } from '../utils/config';
 import Welcome from '../components/UI/Welcome';
 import { getProvider } from '../utils/getProvider';
 import useGetPosts from '../hooks/useGetPosts';
-import { charCount } from '../utils/charCount';
 import PostCard from '../components/PostCard';
 import CreatePostModal from '../components/UI/CreatePostModal';
 import { formatWalletAddress } from '../utils/formatWalletAddress';
 
 function App() {
-  const { walletAddress, posts, setPosts } = useAppContext();
+  const { walletAddress, posts } = useAppContext();
   const { getPosts } = useGetPosts();
   useOnLoad();
   const [content, setContent] = useState<string>('');
@@ -33,7 +32,7 @@ function App() {
   const MAX_CHAR_COUNT = 200;
 
   const sendPost = async () => {
-    if (charCount(content) < 0) {
+    if (content.length <= 2) {
       console.log('Empty content.');
       setContent('');
       setAttachment('');
@@ -118,7 +117,7 @@ function App() {
   };
   return (
     <>
-      <main className='min-h-screen bg-neutral p-32 xl:px-72 3xl:px-80'>
+      <main className='min-h-screen bg-neutral p-4 md:p-16 xl:px-72 3xl:px-80'>
         {!walletAddress ? (
           <Welcome />
         ) : posts === null ? (
@@ -161,7 +160,7 @@ function App() {
                 </p>
               </div>
             </div>
-            <div className='grid grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-6 mt-12'>
+            <div className='md:masonry-3-col mt-12'>
               {posts &&
                 posts.map((post: Post, idx: number) => (
                   <PostCard
