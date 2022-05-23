@@ -11,9 +11,10 @@ import useGetPosts from '../hooks/useGetPosts';
 import PostCard from '../components/PostCard';
 import CreatePostModal from '../components/UI/CreatePostModal';
 import { formatWalletAddress } from '../utils/formatWalletAddress';
+import { validateAttachmentLink } from '../utils/validateAttachmentLink';
 
 function App() {
-  const { walletAddress, posts } = useAppContext();
+  const { walletAddress, posts, setPostErrors, postErrors } = useAppContext();
   const { getPosts } = useGetPosts();
   useOnLoad();
   const [content, setContent] = useState<string>('');
@@ -35,8 +36,13 @@ function App() {
   const sendPost = async () => {
     if (content.length <= 2) {
       console.log('Empty content.');
-      setContent('');
-      setAttachment('');
+      // add error message to existing errors
+      setPostErrors([...postErrors, 'Content is too short.']);
+      return;
+    }
+    if (!validateAttachmentLink(attachment)) {
+      console.log('Invalid attachment.');
+      setPostErrors([...postErrors, 'Provide a valid attachment link.']);
       return;
     }
 
@@ -55,6 +61,7 @@ function App() {
       setAttachment('');
       setModalOpen(false);
       await getPosts();
+      await setPostErrors([]);
     } catch (error) {
       console.log('Error sending post: ', error);
     }

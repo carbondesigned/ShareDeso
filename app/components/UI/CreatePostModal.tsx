@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppContext } from '../../contexts/AppContext';
 import { charCount } from '../../utils/charCount';
 
 type Props = {
@@ -18,6 +19,7 @@ const CreatePostModal = ({
   setContent,
   MAX_CHAR_COUNT,
 }: Props) => {
+  const { postErrors } = useAppContext();
   return (
     <label
       htmlFor='create-modal'
@@ -92,8 +94,25 @@ const CreatePostModal = ({
                 className='input w-full input-bordered bg-base-300'
               />
             </label>
+            <p className='text-xs mt-2 text-base-200'>
+              Find something cool at{' '}
+              <a className='underline' href='https://giphy.com/'>
+                https://giphy.com/
+              </a>{' '}
+              or{' '}
+              <a className='underline' href='https://unsplash.com/'>
+                https://unsplash.com/
+              </a>
+            </p>
           </div>
-          <div className='modal-action w-full mt-12 flex justify-end'>
+          <div className='modal-action w-full mt-12 flex justify-between'>
+            {postErrors.length > 0 && (
+              <div className='text-red-500 text-sm'>
+                {postErrors.map((error: string, idx: number) => (
+                  <p key={idx}>{error}</p>
+                ))}
+              </div>
+            )}
             <div className='tooltip tooltip-bottom' data-tip='Post something!'>
               <button className='btn btn-primary'>Post</button>
             </div>

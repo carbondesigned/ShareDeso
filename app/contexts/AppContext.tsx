@@ -15,6 +15,7 @@ export function AppProvider({ children }: Props) {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[] | null>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [postErrors, setPostErrors] = useState<string[]>([]);
   const state = {
     walletAddress,
     setWalletAddress,
@@ -22,6 +23,8 @@ export function AppProvider({ children }: Props) {
     setPosts,
     modalOpen,
     setModalOpen,
+    postErrors,
+    setPostErrors,
   };
   return <AppContext.Provider value={state}>{children}</AppContext.Provider>;
 }

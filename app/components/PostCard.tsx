@@ -29,8 +29,15 @@ const PostCard = ({ post, likePost, dislikePost, id, deletePost }: Props) => {
           <h6 className='text-base-200 text-sm py-2 px-6 bg-base-300 w-fit rounded-full'>
             ({formatWalletAddress(post.userAddress.toString())})
           </h6>
+
           {isAuthor && (
-            <div className='dropdown dropdown-left dropdown-end'>
+            <div
+              className={`dropdown ${
+                post.attachment && post.attachment.length <= 0
+                  ? 'dropdown-end'
+                  : 'dropdown-left dropdown-end'
+              }`}
+            >
               <label tabIndex={0} className='btn bg-base-300 border-0'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
