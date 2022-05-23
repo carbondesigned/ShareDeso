@@ -146,7 +146,7 @@ function App() {
   };
   return (
     <>
-      <main className='min-h-screen bg-neutral p-4 md:p-16 xl:px-72 3xl:px-80'>
+      <main className='min-h-screen bg-neutral p-4 md:p-16 2xl:px-72 3xl:px-80'>
         {!walletAddress ? (
           <Welcome />
         ) : posts === null ? (
@@ -194,7 +194,7 @@ function App() {
                 </p>
               </div>
             </div>
-            <div className='md:masonry-3-col mt-12'>
+            <div className='md:masonry-2-col lg:masonry-3-col mt-12'>
               {posts &&
                 posts.map((post: Post, idx: number) => (
                   <PostCard

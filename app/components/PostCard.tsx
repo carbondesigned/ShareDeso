@@ -38,7 +38,7 @@ const PostCard = ({ post, likePost, dislikePost, id, deletePost }: Props) => {
                   : 'dropdown-left dropdown-end'
               }`}
             >
-              <label tabIndex={0} className='btn bg-base-300 border-0'>
+              <label tabIndex={0} className='cursor-pointer'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   className='h-6 w-6'
@@ -75,10 +75,10 @@ const PostCard = ({ post, likePost, dislikePost, id, deletePost }: Props) => {
             else dislikePost(id);
           }}
           className={`${
-            post.liked ? 'bg-primary-focus' : 'bg-slate-600'
-          }   grid place-items-center rounded-full px-4 py-2 w-fit cursor-pointer`}
+            post.liked ? 'bg-primary-focus text-base-300' : 'bg-base-300'
+          }   rounded-full px-6 py-2 w-fit cursor-pointer duration-200 origin-left`}
         >
-          <span className='font-bold'>{post.likes}</span>
+          <span className='font-bold'>{post.likes}</span> <span>Likes</span>
         </div>
       </div>
     </div>

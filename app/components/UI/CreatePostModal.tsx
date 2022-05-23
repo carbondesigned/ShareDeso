@@ -105,7 +105,11 @@ const CreatePostModal = ({
               </a>
             </p>
           </div>
-          <div className='modal-action w-full mt-12 flex justify-between'>
+          <div
+            className={`${
+              postErrors.length > 0 ? 'justify-between' : 'justify-end'
+            } modal-action w-full mt-12 flex `}
+          >
             {postErrors.length > 0 && (
               <div className='text-red-500 text-sm'>
                 {postErrors.map((error: string, idx: number) => (
