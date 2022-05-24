@@ -5,8 +5,8 @@ import useConnectWallet from '../../hooks/useConnectWallet';
 function Welcome() {
   const { connectWallet } = useConnectWallet();
   return (
-    <div className='hero min-h-screen bg-base-300 rounded-2xl'>
-      <div className='hero-content flex-col text-center'>
+    <div className='hero bg-base-300 rounded-2xl'>
+      <div className='hero-content flex-col text-center py-32'>
         <div className='mask mask-squircle'>
           <Image
             alt='solana'
@@ -19,18 +19,24 @@ function Welcome() {
           />
         </div>
         <div className='max-w-md'>
-          <h1 className='text-5xl font-bold text-base-100'>DeSo Twitter</h1>
+          <h1 className='text-5xl font-bold text-base-100'>Share Deso</h1>
           <p className='pt-4 pb-12 text-xl text-base-200'>
-            Learning Solana & Rust
+            Share your thoughts with a splash of art decentralized on the web.
           </p>
           <div className='tooltip tooltip-bottom' data-tip='Using Solana!'>
             <button
-              className='btn btn-primary font-bold'
+              className='btn btn-lg btn-primary font-bold'
               onClick={connectWallet}
             >
               Connect your Wallet
             </button>
           </div>
+          <p className='text-base-200 mt-4'>
+            Use{' '}
+            <a href='https://phantom.app/' className='underline'>
+              Phantom Wallet
+            </a>
+          </p>
         </div>
       </div>
     </div>

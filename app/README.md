@@ -1,5 +1,5 @@
 # UI Todo
 
-- make liking better (maybe use indicator)
-- have masonry layout
-- add option to delete if you are the author
+- [x] make liking better (maybe use indicator)
+- [x] have masonry layout
+- [x] add option to delete if you are the author

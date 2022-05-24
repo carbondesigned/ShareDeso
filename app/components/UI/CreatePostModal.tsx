@@ -35,7 +35,7 @@ const CreatePostModal = ({
           </h2>
           <label
             htmlFor='create-modal'
-            className='btn bg-base-300 btn-sm btn-circle'
+            className='btn bg-base-300 btn-sm btn-circle border-0'
           >
             ✕
           </label>
@@ -49,7 +49,7 @@ const CreatePostModal = ({
               name='content'
               value={content}
               placeholder='Something.'
-              className='textarea w-full min-h-[8em] text-md bg-base-300'
+              className='textarea w-full min-h-[8em] text-md bg-base-300 placeholder:text-base-200'
               maxLength={MAX_CHAR_COUNT}
               onChange={(e) => setContent(e.target.value)}
             />
@@ -91,7 +91,7 @@ const CreatePostModal = ({
                 onChange={(e) => setAttachment(e.target.value)}
                 type='text'
                 placeholder='https://image.com/image.png'
-                className='input w-full input-bordered bg-base-300'
+                className='input w-full input-bordered bg-base-300 placeholder:text-base-200'
               />
             </label>
             <p className='text-xs mt-2 text-base-200'>
